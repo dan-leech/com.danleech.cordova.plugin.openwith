@@ -57,8 +57,6 @@
     "src/android/com/missiveapp/openwith/PluginResultSender.java",
     "src/android/com/missiveapp/openwith/Serializer.java",
     "src/ios/OpenWithPlugin.m",
-    "src/ios/ShareExtension/MainInterface.storyboard",
-    "src/ios/ShareExtension/ShareExtension-Info.plist",
     "src/ios/ShareExtension/ShareViewController.h",
     "src/ios/ShareExtension/ShareViewController.m",
     "www/openwith.js",
