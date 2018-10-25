@@ -51,7 +51,7 @@ On the Cordova App side, the plugin checks listens for app start or resume event
 Here's the promised one liner:
 
 ```
-cordova plugin add com.danleech.cordova.plugin.openwith \
+cordova plugin add https://github.com/dan-leech/my-plugins-com.danleech.cordova.plugin.openwith \
   --variable ANDROID_MIME_TYPE="image/*" \
   --variable IOS_URL_SCHEME=ccfoveaopenwithdemo \
   --variable IOS_UNIFORM_TYPE_IDENTIFIER=public.image
