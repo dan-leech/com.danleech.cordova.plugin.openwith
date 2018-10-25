@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>__DISPLAY_NAME__</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>__BUNDLE_IDENTIFIER__</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>__BUNDLE_SHORT_VERSION_STRING__</string>
+	<key>CFBundleVersion</key>
+	<string>__BUNDLE_VERSION__</string>
+	<key>NSExtension</key>
+	<dict>
+    		<key>NSExtensionAttributes</key>
+    		<dict>
+    			<key>NSExtensionActivationRule</key>
+    			<string>SUBQUERY (extensionItems, $extensionItem, SUBQUERY ($extensionItem.attachments, $attachment,
+                            (ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.plain-text" OR
+                             ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.movie")
+                          ).@count == $extensionItem.attachments.@count AND $extensionItem.attachments.@count == 1
+                        ).@count == 1 OR
+                        SUBQUERY (extensionItems, $extensionItem, SUBQUERY ($extensionItem.attachments, $attachment,
+                            (ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.jpeg" OR
+                             ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.png")
+                          ).@count == $extensionItem.attachments.@count AND $extensionItem.attachments.@count &lt;= 5
+                        ).@count == 1</string>
+    		</dict>
+    		<key>NSExtensionPrincipalClass</key>
+            <string>ShareViewController</string>
+    		<key>NSExtensionPointIdentifier</key>
+    		<string>com.apple.share-services</string>
+    	</dict>
+</dict>
+</plist>

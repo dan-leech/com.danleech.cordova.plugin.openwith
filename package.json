@@ -1,0 +1,76 @@
+{
+  "name": "com.danleech.cordova.plugin.openwith",
+  "version": "1.0.0",
+  "description": "Cordova \"Open With\" plugin for iOS and Android",
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "com.danleech.cordova.plugin.openwith",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {
+    "file-system": "^2.2.2",
+    "path": "^0.12.7",
+    "plist": "^2.1.0",
+    "xcode": "git+https://github.com/apache/cordova-node-xcode.git"
+  },
+  "devDependencies": {
+    "eslint": "^4.7.2",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "eslint-watch": "^3.1.2",
+    "expect.js": "^0.3.1",
+    "mocha": "^3.5.3"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova",
+    "phonegap",
+    "openwith",
+    "ios",
+    "android"
+  ],
+  "scripts": {
+    "install-dev": "./install-pmd",
+    "java-lint": "pmd -minimumpriority 4 -d src/android -R java-basic,java-android,java-braces,java-codesize,java-empty,java-finalizers,java-imports,java-naming,java-optimizations,java-strictexception,java-strings,java-sunsecure,java-typeresolution,java-unnecessary,java-unusedcode -f textcolor",
+    "js-lint": "eslint www",
+    "js-lint-watch": "esw --watch www",
+    "js-test": "mocha www",
+    "js-test-watch": "mocha --watch www",
+    "objc-lint": "true",
+    "test": "npm run js-lint && npm run js-test && npm run java-lint"
+  },
+  "author": "Daniil Kostin",
+  "license": "Apache 2.0",
+  "# White list the files to pack by npm publish": "",
+  "files": [
+    "src/android/com/missiveapp/openwith/ByteStreams.java",
+    "src/android/com/missiveapp/openwith/OpenWithPlugin.java",
+    "src/android/com/missiveapp/openwith/PluginResultSender.java",
+    "src/android/com/missiveapp/openwith/Serializer.java",
+    "src/ios/OpenWithPlugin.m",
+    "src/ios/ShareExtension/MainInterface.storyboard",
+    "src/ios/ShareExtension/ShareExtension-Info.plist",
+    "src/ios/ShareExtension/ShareViewController.h",
+    "src/ios/ShareExtension/ShareViewController.m",
+    "www/openwith.js",
+    "www/test-openwith.js",
+    "hooks/iosAddTarget.js",
+    "hooks/iosRemoveTarget.js",
+    "hooks/iosCopyShareExtension.js",
+    "hooks/npmInstall.js",
+    "install-pmd",
+    "plugin.xml",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ]
+}

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.danleech.cordova.plugin.openwith"
+    version="1.0.0">
+
+    <name>OpenWith</name>
+	<description>Cordova "Open With" plugin for iOS and Android</description>
+    <engines>
+        <engine name="cordova" version=">=6.0.0" />
+    </engines>
+
+	<license>MIT</license>
+    <keywords>cordova,phonegap,openwith,ios,android</keywords>
+
+    <!-- ios -->
+    <platform name="ios">
+        <preference name="IOS_URL_SCHEME" />
+
+        <js-module src="www/openwith.js" name="openwith">
+            <clobbers target="cordova.openwith" />
+        </js-module>
+
+        <!-- Cordova 2.2 -->
+        <plugins-plist key="OpenWith" string="OpenWith" />
+
+        <!-- Cordova 2.5+ -->
+        <config-file target="config.xml" parent="/*">
+            <feature name="OpenWithPlugin">
+                <param name="ios-package" value="OpenWithPlugin" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/ios/OpenWithPlugin.m" />
+
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+            <array>
+                <dict>
+                    <key>CFBundleURLName</key>
+                    <string>group.$IOS_URL_SCHEME.shareextension</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>$IOS_URL_SCHEME</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+
+        <hook type="before_plugin_install" src="hooks/npmInstall.js" />
+        <hook type="before_plugin_install" src="hooks/iosCopyShareExtension.js" />
+        <hook type="after_plugin_install" src="hooks/iosAddTarget.js" />
+        <hook type="before_plugin_uninstall" src="hooks/iosRemoveTarget.js" />
+
+        <framework src="MobileCoreServices.framework" />
+    </platform>
+
+    <!-- android -->
+    <platform name="android">
+        <preference name="ANDROID_EXTRA_ACTIONS" default=" " />
+
+        <js-module src="www/openwith.js" name="openwith">
+            <clobbers target="cordova.openwith" />
+        </js-module>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
+            <intent-filter>
+                <!-- category android:name="android.intent.category.BROWSABLE" / -->
+                <!-- See https://developer.android.com/guide/topics/manifest/data-element.html -->
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="video/*" />
+                <data android:mimeType="text/plain"/>
+                <action android:name="android.intent.action.SEND" />
+                $ANDROID_EXTRA_ACTIONS
+                <!-- action android:name="android.intent.action.VIEW" / -->
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </config-file>
+
+        <!-- Cordova >= 3.0.0 -->
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="OpenWithPlugin">
+				<param name="android-package" value="com.danleech.cordova.plugin.openwith.OpenWithPlugin"/>
+			</feature>
+            <preference name="AndroidLaunchMode" value="singleTask"/>
+        </config-file>
+
+        <!-- cordova plugin src files -->
+        <source-file src="src/android/OpenWithPlugin.java" target-dir="src/com/danleech/cordova/plugin/openwith" />
+        <source-file src="src/android/PluginResultSender.java" target-dir="src/com/danleech/cordova/plugin/openwith" />
+        <source-file src="src/android/Serializer.java" target-dir="src/com/danleech/cordova/plugin/openwith" />
+        <source-file src="src/android/ByteStreams.java" target-dir="src/com/danleech/cordova/plugin/openwith" />
+    </platform>
+
+<!--
+vim: ts=4:sw=4:et
+-->
+</plugin>
