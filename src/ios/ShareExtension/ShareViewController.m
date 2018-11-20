@@ -30,7 +30,6 @@
 #import <UIKit/UIKit.h>
 #import <Social/Social.h>
 #import "ShareViewController.h"
-#import "UImage+fixOrientation.h"
 
 @interface ShareViewController : UIViewController {
     int _verbosityLevel;
@@ -193,53 +192,56 @@
                  * This path will be sent to React Native and can be processed and accessed RN side.
                  **/
 
-                    UIImage *sharedImage;
-                    NSString *filePath = [tmpDir stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
-                    NSString *fullPath;
-                    if ([(NSObject *)item isKindOfClass:[UIImage class]]){
-                        sharedImage = (UIImage *)item;
-                    }else if ([(NSObject *)item isKindOfClass:[NSURL class]]){
-                        NSURL* url = (NSURL *)item;
-                        sharedImage = [UIImage imageWithContentsOfFile:url.path];
-                    }
+                NSString *filePath = [tmpDir stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+                NSString *fullPath;
+                NSData *sharedData = nil;
 
-                    NSString *uti = nil;
-                    if ([itemProvider.registeredTypeIdentifiers count] > 0) {
-                        uti = itemProvider.registeredTypeIdentifiers[0];
-                    }
-                    else {
-                        uti = @"public.image";
-                    }
+                NSString *uti = nil;
+                if ([itemProvider.registeredTypeIdentifiers count] > 0) {
+                    uti = itemProvider.registeredTypeIdentifiers[0];
+                }
+                else {
+                    uti = @"public.image";
+                }
 
-                    if ([uti hasPrefix:@"public.png"]) {
-                        fullPath = [filePath stringByAppendingPathExtension:@"png"];
-                        [fileManager createFileAtPath:fullPath contents:UIImagePNGRepresentation(sharedImage) attributes:nil];
-                    } else {
-                        fullPath = [filePath stringByAppendingPathExtension:@"jpg"];
-                        [fileManager createFileAtPath:fullPath contents:UIImageJPEGRepresentation(sharedImage, 1) attributes:nil];
-                    }
+                if ([uti hasPrefix:@"public.png"]) {
+                    // not tested
+                    fullPath = [filePath stringByAppendingPathExtension:@"png"];
+                } else {
+                    fullPath = [filePath stringByAppendingPathExtension:@"jpg"];
+                }
 
-                    if ([fileManager fileExistsAtPath:fullPath]) {
-                        NSLog(@"Image stored");
-                    }
+                if ([(NSObject *)item isKindOfClass:[UIImage class]]) {
+                    // maybe crash here, but gallery usually returns NSURL
+                    sharedData = UIImageJPEGRepresentation((UIImage *)item, 1);
+                } else if ([(NSObject *)item isKindOfClass:[NSURL class]]){
+                    NSURL *url = (NSURL *)item;
+                    sharedData = [NSData dataWithContentsOfURL: url];
+                }
 
-                    NSString *suggestedName = @"";
-                    if ([itemProvider respondsToSelector:NSSelectorFromString(@"getSuggestedName")]) {
-                        suggestedName = [itemProvider valueForKey:@"suggestedName"];
-                    }
+                [fileManager createFileAtPath:fullPath contents:sharedData attributes:nil];
 
-                    NSDictionary *dict = @{
-                        @"backURL": self.backURL != nil ? self.backURL : @"",
-                        @"text": @"",
-                        @"path": fullPath,
-                        @"uti": uti,
-                        @"utis": itemProvider.registeredTypeIdentifiers,
-                        @"name": suggestedName
-                    };
+                if ([fileManager fileExistsAtPath:fullPath]) {
+                    NSLog(@"Image stored");
+                }
 
-                    [dataArray addObject:dict];
-                    dispatch_group_leave(dispatchGroup);
-                }];
+                NSString *suggestedName = @"";
+                if ([itemProvider respondsToSelector:NSSelectorFromString(@"getSuggestedName")]) {
+                    suggestedName = [itemProvider valueForKey:@"suggestedName"];
+                }
+
+                NSDictionary *dict = @{
+                    @"backURL": self.backURL != nil ? self.backURL : @"",
+                    @"text": @"",
+                    @"path": fullPath,
+                    @"uti": uti,
+                    @"utis": itemProvider.registeredTypeIdentifiers,
+                    @"name": suggestedName
+                };
+
+                [dataArray addObject:dict];
+                dispatch_group_leave(dispatchGroup);
+            }];
         }
         if ([itemProvider hasItemConformingToTypeIdentifier:@"public.movie"]) {
             dispatch_group_enter(dispatchGroup);
@@ -249,7 +251,7 @@
 
             [itemProvider loadItemForTypeIdentifier:@"public.movie" options:nil completionHandler: ^(NSURL *itemUrl, NSError *error) {
 
-                NSLog(itemUrl.path);
+                NSLog(@"itemUrl.path: %@", itemUrl.path);
 
                 NSString *fullPath = [tmpDir stringByAppendingPathComponent:[itemUrl.path lastPathComponent]];
 
